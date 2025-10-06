@@ -11,8 +11,18 @@ import { appSt } from "./style.css";
 import { Gap } from "@alfalab/core-components/gap";
 import { FormEvent, useState } from "react";
 import { Textarea } from "@alfalab/core-components/textarea";
+import { sendDataToGA } from "./utils/events.ts";
+
+const longRead = "alfabank://longread?endpoint=v1/adviser/longreads/67708";
+
+const Redirect = () => {
+  window.location.href = longRead;
+
+  return null;
+};
 
 export const App = () => {
+  const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
   const [value, setValue] = useState("");
   const [label, setLabel] = useState(
     "Напишите цель. Например, Саше на новый велосипед",
@@ -20,13 +30,22 @@ export const App = () => {
   const [loading, setLoading] = useState(false);
 
   const submit = () => {
+    window.gtag("event", "6076_get_sub", {
+      variant_name: "6076_3",
+    });
+
     setLoading(true);
 
-    Promise.resolve().then(() => {
+    sendDataToGA({ main_aim: value }).then(() => {
       setLoading(false);
       LS.setItem(LSKeys.ShowThx, true);
+      setThx(true);
     });
   };
+
+  if (thxShow) {
+    return <Redirect />;
+  }
 
   return (
     <>
@@ -127,13 +146,7 @@ export const App = () => {
       <Gap size={96} />
 
       <div className={appSt.bottomBtn}>
-        <ButtonMobile
-          block
-          view="primary"
-          href=""
-          loading={loading}
-          onClick={submit}
-        >
+        <ButtonMobile block view="primary" loading={loading} onClick={submit}>
           Хотим участвовать!
         </ButtonMobile>
       </div>
