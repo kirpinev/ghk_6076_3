@@ -13,7 +13,7 @@ import { FormEvent, useState } from "react";
 import { Textarea } from "@alfalab/core-components/textarea";
 import { sendDataToGA } from "./utils/events.ts";
 
-const longRead = "alfabank://longread?endpoint=v1/adviser/longreads/67708";
+const longRead = "alfabank://longread?endpoint=v1/adviser/longreads/77415";
 
 const Redirect = () => {
   window.location.href = longRead;
